@@ -1,0 +1,20 @@
+<html>
+  <head>
+
+  </head>
+
+  <body>
+
+    <pwb-geolocation></pwb-geolocation>
+
+    <script type="module" src="dist/esm/index.js"></script>
+
+    <script>
+      const geo = document.querySelector('pwb-geolocation');
+      
+      setTimeout(() => {
+        const location = geo.getLocation();
+      }, 500);
+    </script>
+  </body>
+</html>

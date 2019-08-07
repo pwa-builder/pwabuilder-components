@@ -23,6 +23,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "adaptivecards": "^1.2.0",
     "lit-element": "^2.2.1"
   }
 }

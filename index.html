@@ -10,14 +10,20 @@
   <pwb-share title="share title" text="share text" url="https://microsoft.com"></pwb-share>
   <pwb-install iconpath="https://webboard-app.web.app/assets/icon/256.png"
     manifestpath="/test-manifest.webmanifest" forceshow="true"></pwb-install>
+  <pwb-adapcard text="Card Text" imageurl="https://webboard-app.web.app/assets/icon/256.png"></pwb-adapcard>
 
   <script type="module" src="dist/esm/index.js"></script>
 
   <script>
     const geo = document.querySelector('pwb-geolocation');
-
     setTimeout(() => {
       const location = geo.getLocation();
+      console.log(location);
+    }, 500);
+
+    const adapCard = document.querySelector('pwb-adapcard');
+    setTimeout(async () => {
+      await adapCard.createCard();
       console.log(location);
     }, 500);
   </script>

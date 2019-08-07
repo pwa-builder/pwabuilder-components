@@ -1,10 +1,22 @@
 import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import { AdaptiveCard } from 'adaptivecards';
 
 const extensions = [".js"];
 
 const commonPlugins = [
-  resolve({ module: true, jsnext: true, extensions })
+  resolve({ module: true, jsnext: true, extensions }),
+  commonjs({
+    extensions, include: 'node_modules/**', namedExports: {
+      "node_modules/adaptivecards/lib/adaptivecards.js": [
+        'AdaptiveCard',
+        'Version',
+        'TextBlock',
+        'Image'
+      ]
+    }
+  })
 ];
 
 const babelPlugins = [

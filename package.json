@@ -19,11 +19,13 @@
     "@babel/preset-env": "^7.5.5",
     "rollup": "^1.18.0",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {
     "adaptivecards": "^1.2.0",
+    "idb-keyval": "^3.2.0",
     "lit-element": "^2.2.1"
   }
 }

@@ -2,27 +2,31 @@ import {
   LitElement, html, customElement, property
 } from 'lit-element';
 
-/**
- * Use the customElement decorator to define your class as
- * a custom element. Registers <my-element> as an HTML tag.
- */
 @customElement('pwb-share')
 export class pwbshare extends LitElement {
 
-  /**
-   * Create an observed property. Triggers update on change.
-   */
-  @property()
-  foo = 'foo';
+  @property() title: string;
+  @property() text: string;
+  @property() url: string;
 
-  /**
-   * Implement `render` to define a template for your element.
-   */
+  public async share() {
+    // have to cast to any here
+    // because typescript lacks
+    // types for the web share api
+    if ((navigator as any).share) {
+      try {
+        await (navigator as any).share({
+          title: this.title,
+          text: this.text,
+          url: this.url,
+        });
+      } catch (err) {
+        console.error('pwb-share: There was an error trying to share this content, make sure you pass a title, text and url');
+      }
+    }
+  }
+
   render() {
-    /**
-     * Use JavaScript expressions to include property values in
-     * the element template.
-     */
-    return html`<p>${this.foo}</p>`;
+    return html`<button @click="${() => this.share()}">Share</button>`;
   }
 }

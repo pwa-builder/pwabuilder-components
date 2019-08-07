@@ -2,37 +2,40 @@ import {
   LitElement, html, customElement, property
 } from 'lit-element';
 
-/**
- * Use the customElement decorator to define your class as
- * a custom element. Registers <my-element> as an HTML tag.
- */
+
 @customElement('pwb-geolocation')
 export class pwbgeolocation extends LitElement {
 
-  @property() currentPosition: any;
+  @property() currentPosition: Coordinates;
+  @property() watchedPosition: Coordinates;
 
-  public getLocation() {
+  public getLocation(): Coordinates | null {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position.coords);
-
+      navigator.geolocation.getCurrentPosition((position: Position) => {
         this.currentPosition = position.coords;
         return position.coords;
       })
     }
     else {
       console.info("geolocation is not supported in this environment");
+      return null;
     }
   }
-  /**
-   * Implement `render` to define a template for your element.
-   *
-   */
+
+  public watchLocation(): Coordinates | null {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.watchPosition((position: Position) => {
+        this.watchedPosition = position.coords;
+        return position.coords;
+      })
+    }
+    else {
+      console.info("geolocation is not supported in this environment");
+      return null;
+    }
+  }
+
   render() {
-    /**
-     * Use JavaScript expressions to include property values in
-     * the element template.
-     */
     return html``
   }
 }

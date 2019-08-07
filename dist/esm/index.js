@@ -2554,6 +2554,62 @@
     found at http://polymer.github.io/PATENTS.txt
     */
     const supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype;
+    const constructionToken = Symbol();
+    class CSSResult {
+      constructor(cssText, safeToken) {
+        if (safeToken !== constructionToken) {
+          throw new Error('CSSResult is not constructable. Use `unsafeCSS` or `css` instead.');
+        }
+
+        this.cssText = cssText;
+      } // Note, this is a getter so that it's lazy. In practice, this means
+      // stylesheets are not created until the first element instance is made.
+
+
+      get styleSheet() {
+        if (this._styleSheet === undefined) {
+          // Note, if `adoptedStyleSheets` is supported then we assume CSSStyleSheet
+          // is constructable.
+          if (supportsAdoptingStyleSheets) {
+            this._styleSheet = new CSSStyleSheet();
+
+            this._styleSheet.replaceSync(this.cssText);
+          } else {
+            this._styleSheet = null;
+          }
+        }
+
+        return this._styleSheet;
+      }
+
+      toString() {
+        return this.cssText;
+      }
+
+    }
+
+    const textFromCSSResult = value => {
+      if (value instanceof CSSResult) {
+        return value.cssText;
+      } else if (typeof value === 'number') {
+        return value;
+      } else {
+        throw new Error(`Value passed to 'css' function must be a 'css' function result: ${value}. Use 'unsafeCSS' to pass non-literal values, but
+            take care to ensure page security.`);
+      }
+    };
+    /**
+     * Template tag which which can be used with LitElement's `style` property to
+     * set element styles. For security reasons, only literal string values may be
+     * used. To incorporate non-literal values `unsafeCSS` may be used inside a
+     * template string part.
+     */
+
+
+    const css = (strings, ...values) => {
+      const cssText = values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);
+      return new CSSResult(cssText, constructionToken);
+    };
 
     /**
      * @license
@@ -2780,41 +2836,439 @@
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    /**
-     * Use the customElement decorator to define your class as
-     * a custom element. Registers <my-element> as an HTML tag.
-     */
     exports.pwbgeolocation = class pwbgeolocation extends LitElement {
         getLocation() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    console.log(position.coords);
                     this.currentPosition = position.coords;
                     return position.coords;
                 });
             }
             else {
                 console.info("geolocation is not supported in this environment");
+                return null;
             }
         }
-        /**
-         * Implement `render` to define a template for your element.
-         *
-         */
+        watchLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition((position) => {
+                    this.watchedPosition = position.coords;
+                    return position.coords;
+                });
+            }
+            else {
+                console.info("geolocation is not supported in this environment");
+                return null;
+            }
+        }
         render() {
-            /**
-             * Use JavaScript expressions to include property values in
-             * the element template.
-             */
-            return html `<h1>Hello world</h1>`;
+            return html ``;
         }
     };
     __decorate([
         property()
     ], exports.pwbgeolocation.prototype, "currentPosition", void 0);
+    __decorate([
+        property()
+    ], exports.pwbgeolocation.prototype, "watchedPosition", void 0);
     exports.pwbgeolocation = __decorate([
         customElement('pwb-geolocation')
     ], exports.pwbgeolocation);
+
+    var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+    exports.pwbclipboard = class pwbclipboard extends LitElement {
+        copyText() {
+            return __awaiter(this, void 0, void 0, function* () {
+                if (navigator.clipboard) {
+                    try {
+                        if (this.textToCopy) {
+                            yield navigator.clipboard.writeText(this.textToCopy);
+                        }
+                        else {
+                            console.info("pwb-clipboard: You must pass the property textToCopy. Something like <pwb-clipboard texttocopy='hello world' />");
+                        }
+                    }
+                    catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+        }
+        readText() {
+            return __awaiter(this, void 0, void 0, function* () {
+                if (navigator.clipboard) {
+                    try {
+                        const clipboardText = yield navigator.clipboard.readText();
+                        if (clipboardText) {
+                            return clipboardText;
+                        }
+                        else {
+                            return null;
+                        }
+                    }
+                    catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+        }
+        render() {
+            /**
+             * Use JavaScript expressions to include property values in
+             * the element template.
+             */
+            return html `
+      <button @click="${() => this.copyText()}">Copy</button>
+    `;
+        }
+    };
+    __decorate$1([
+        property()
+    ], exports.pwbclipboard.prototype, "textToCopy", void 0);
+    exports.pwbclipboard = __decorate$1([
+        customElement('pwb-clipboard')
+    ], exports.pwbclipboard);
+
+    var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+    exports.pwbshare = class pwbshare extends LitElement {
+        share() {
+            return __awaiter$1(this, void 0, void 0, function* () {
+                // have to cast to any here
+                // because typescript lacks
+                // types for the web share api
+                if (navigator.share) {
+                    try {
+                        yield navigator.share({
+                            title: this.title,
+                            text: this.text,
+                            url: this.url,
+                        });
+                    }
+                    catch (err) {
+                        console.error('pwb-share: There was an error trying to share this content, make sure you pass a title, text and url');
+                    }
+                }
+            });
+        }
+        render() {
+            return html `<button @click="${() => this.share()}">Share</button>`;
+        }
+    };
+    __decorate$2([
+        property()
+    ], exports.pwbshare.prototype, "title", void 0);
+    __decorate$2([
+        property()
+    ], exports.pwbshare.prototype, "text", void 0);
+    __decorate$2([
+        property()
+    ], exports.pwbshare.prototype, "url", void 0);
+    exports.pwbshare = __decorate$2([
+        customElement('pwb-share')
+    ], exports.pwbshare);
+
+    var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var __awaiter$2 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+    exports.pwbinstall = class pwbinstall extends LitElement {
+        constructor() {
+            super(...arguments);
+            this.openModal = false;
+        }
+        static get styles() {
+            return css `
+     #installModal {
+      background: white;
+      position: fixed;
+      top: 6em;
+      left: 12em;
+      right: 12em;
+      bottom: 6em;
+      padding: 2em;
+      font-family: sans-serif;
+      box-shadow: 0 28px 48px rgba(0, 0, 0, .4);
+     }
+
+     #headerContainer {
+      display: flex;
+      align-items: center;
+     }
+
+     #headerContainer img {
+      height: 6em;
+      margin-right: 1em;
+      background: lightgrey;
+      border-radius: 10px;
+      padding: 12px;
+     }
+
+     #buttonsContainer {
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+      bottom: -4em;
+      right: -1em;
+     }
+
+     #installButton {
+      background: #2b5797;
+      color: white;
+      border: none;
+      font-size: 14px;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 9px;
+      padding-bottom: 9px;
+      border-radius: 5px;
+      margin-right: 10px;
+      text-transform: uppercase;
+      outline: none;
+      cursor: pointer;
+     }
+
+     #cancelButton {
+      background: #ee1111;
+      color: white;
+      border: none;
+      font-size: 14px;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 9px;
+      padding-bottom: 9px;
+      border-radius: 5px;
+      margin-right: 10px;
+      text-transform: uppercase;
+      outline: none;
+      cursor: pointer;
+     }
+
+     #screenshots img {
+      height: 12em;
+      margin-right: 12px;
+     }
+
+     #tagsDiv {
+      margin-top: 1em;
+      margin-bottom: 1em;
+     }
+
+     #desc {
+      width: 34em;
+     }
+
+      #tagsDiv span {
+        background: grey;
+        color: white;
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 4px;
+        font-weight: bold;
+        border-radius: 24px;
+        margin-right: 12px;
+        padding-top: 1px;
+      }
+    `;
+        }
+        firstUpdated() {
+            return __awaiter$2(this, void 0, void 0, function* () {
+                if (this.manifestPath) {
+                    yield this.getManifestData();
+                }
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    console.log('e', e);
+                    // Prevent Chrome 67 and earlier from automatically showing the prompt
+                    e.preventDefault();
+                    // Stash the event so it can be triggered later.
+                    this.deferredPrompt = e;
+                });
+            });
+        }
+        getManifestData() {
+            return __awaiter$2(this, void 0, void 0, function* () {
+                const response = yield fetch(this.manifestPath);
+                const data = yield response.json();
+                console.log(data);
+                this.manifestData = data;
+            });
+        }
+        openPrompt() {
+            this.openModal = true;
+        }
+        install() {
+            return __awaiter$2(this, void 0, void 0, function* () {
+                if (this.deferredPrompt) {
+                    this.deferredPrompt.prompt();
+                    const choiceResult = yield this.deferredPrompt.userChoice;
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Your PWA has been installed');
+                        return true;
+                    }
+                    else {
+                        console.log('User chose to not install your PWA');
+                        return false;
+                    }
+                }
+            });
+        }
+        cancel() {
+            this.openModal = false;
+        }
+        render() {
+            return html `
+      <button @click="${() => this.openPrompt()}">Install</button>
+
+      ${this.openModal ?
+            html `
+          <div id="installModal">
+          <div id="headerContainer">
+          <img src="${this.iconPath}"></img>
+
+          <div>
+            <h1>${this.manifestData.name}</h1>
+
+            ${this.manifestData.categories ? html `<div id="tagsDiv">
+              ${this.manifestData.categories.map((tag) => {
+                return html `
+                  <span>${tag}</span>
+                `;
+            })}
+            </div>` : null}
+
+            <p id="desc">
+              ${this.manifestData.description}
+            </p>
+          </div>
+        </div>
+
+        <div id="contentContainer">
+          ${this.manifestData.screenshots ?
+                html `
+            <div>
+              <h3>Screenshots</h3>
+              <div id="screenshots">
+                ${this.manifestData.screenshots.map((screen) => {
+                    return html `
+                        <img src="${screen.src}">
+                      `;
+                })}
+              </div>
+            </div>
+            ` : null}
+        </div>
+
+        <div id="buttonsContainer">
+          <button id="installButton" @click="${() => this.install()}">Install</button>
+          <button id="cancelButton"  @click="${() => this.cancel()}">Cancel</button>
+        </div>
+          </div>
+        `
+            : null}
+    `;
+        }
+    };
+    __decorate$3([
+        property()
+    ], exports.pwbinstall.prototype, "deferredPrompt", void 0);
+    __decorate$3([
+        property()
+    ], exports.pwbinstall.prototype, "manifestPath", void 0);
+    __decorate$3([
+        property()
+    ], exports.pwbinstall.prototype, "iconPath", void 0);
+    __decorate$3([
+        property()
+    ], exports.pwbinstall.prototype, "manifestData", void 0);
+    __decorate$3([
+        property()
+    ], exports.pwbinstall.prototype, "openModal", void 0);
+    exports.pwbinstall = __decorate$3([
+        customElement('pwb-install')
+    ], exports.pwbinstall);
+
+    function __export(m) {
+        for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // Copyright (c) Microsoft Corporation. All rights reserved.
+    // Licensed under the MIT License.
+    __export(require("./card-elements"));
+    __export(require("./enums"));
+    __export(require("./host-config"));
+    __export(require("./shared"));
+    __export(require("./utils"));
+
+    var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    exports.pwbadapcard = class pwbadapcard extends LitElement {
+        createCard() {
+            let card = new undefined();
+            card.version = new undefined(1, 0);
+            if (this.text) {
+                let textBlock = new undefined();
+                textBlock.text = "Hello World";
+                card.addItem(textBlock);
+            }
+            if (this.imageUrl) {
+                let imageBlock = new undefined();
+                imageBlock.url = this.imageUrl;
+                card.addItem(imageBlock);
+            }
+            return card.toJSON();
+        }
+        render() {
+            return html ``;
+        }
+    };
+    __decorate$4([
+        property()
+    ], exports.pwbadapcard.prototype, "text", void 0);
+    __decorate$4([
+        property()
+    ], exports.pwbadapcard.prototype, "imageUrl", void 0);
+    exports.pwbadapcard = __decorate$4([
+        customElement('pwb-adapcard')
+    ], exports.pwbadapcard);
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

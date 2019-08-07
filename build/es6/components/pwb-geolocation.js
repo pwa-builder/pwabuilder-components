@@ -5,38 +5,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html, customElement, property } from 'lit-element';
-/**
- * Use the customElement decorator to define your class as
- * a custom element. Registers <my-element> as an HTML tag.
- */
 let pwbgeolocation = class pwbgeolocation extends LitElement {
     getLocation() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log(position.coords);
                 this.currentPosition = position.coords;
                 return position.coords;
             });
         }
         else {
             console.info("geolocation is not supported in this environment");
+            return null;
         }
     }
-    /**
-     * Implement `render` to define a template for your element.
-     *
-     */
+    watchLocation() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.watchPosition((position) => {
+                this.watchedPosition = position.coords;
+                return position.coords;
+            });
+        }
+        else {
+            console.info("geolocation is not supported in this environment");
+            return null;
+        }
+    }
     render() {
-        /**
-         * Use JavaScript expressions to include property values in
-         * the element template.
-         */
-        return html `<h1>Hello world</h1>`;
+        return html ``;
     }
 };
 __decorate([
     property()
 ], pwbgeolocation.prototype, "currentPosition", void 0);
+__decorate([
+    property()
+], pwbgeolocation.prototype, "watchedPosition", void 0);
 pwbgeolocation = __decorate([
     customElement('pwb-geolocation')
 ], pwbgeolocation);

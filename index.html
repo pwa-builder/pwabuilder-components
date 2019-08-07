@@ -1,20 +1,26 @@
 <html>
-  <head>
 
-  </head>
+<head>
+</head>
 
-  <body>
+<body>
 
-    <pwb-geolocation></pwb-geolocation>
+  <pwb-geolocation></pwb-geolocation>
+  <pwb-clipboard texttocopy="Hello World"></pwb-clipboard>
+  <pwb-share title="share title" text="share text" url="https://microsoft.com"></pwb-share>
+  <pwb-install iconpath="https://webboard-app.web.app/assets/icon/256.png"
+    manifestpath="/test-manifest.webmanifest" forceshow="true"></pwb-install>
 
-    <script type="module" src="dist/esm/index.js"></script>
+  <script type="module" src="dist/esm/index.js"></script>
 
-    <script>
-      const geo = document.querySelector('pwb-geolocation');
-      
-      setTimeout(() => {
-        const location = geo.getLocation();
-      }, 500);
-    </script>
-  </body>
+  <script>
+    const geo = document.querySelector('pwb-geolocation');
+
+    setTimeout(() => {
+      const location = geo.getLocation();
+      console.log(location);
+    }, 500);
+  </script>
+</body>
+
 </html>

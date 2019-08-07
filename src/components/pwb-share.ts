@@ -9,7 +9,7 @@ export class pwbshare extends LitElement {
   @property() text: string;
   @property() url: string;
 
-  public async share() {
+  public async share(): Promise<void> {
     // have to cast to any here
     // because typescript lacks
     // types for the web share api

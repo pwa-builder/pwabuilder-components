@@ -2,27 +2,39 @@ import {
   LitElement, html, customElement, property
 } from 'lit-element';
 
-/**
- * Use the customElement decorator to define your class as
- * a custom element. Registers <my-element> as an HTML tag.
- */
 @customElement('pwb-install')
 export class pwbinstall extends LitElement {
 
-  /**
-   * Create an observed property. Triggers update on change.
-   */
   @property()
-  foo = 'foo';
+  deferredPrompt: any;
 
-  /**
-   * Implement `render` to define a template for your element.
-   */
+  firstUpdated(): void {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('e', e);
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      this.deferredPrompt = e;
+    });
+  }
+
+  public async install(): Promise<boolean> {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+
+      const choiceResult = await this.deferredPrompt.userChoice;
+
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Your PWA has been installed');
+        return true;
+      } else {
+        console.log('User chose to not install your PWA');
+        return false;
+      }
+    }
+  }
+
   render() {
-    /**
-     * Use JavaScript expressions to include property values in
-     * the element template.
-     */
-    return html`<p>${this.foo}</p>`;
+    return html`<button @click="${() => this.install()}">Install</button>`;
   }
 }

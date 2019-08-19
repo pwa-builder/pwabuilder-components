@@ -17,12 +17,48 @@ export class pwbinstall extends LitElement {
       background: white;
       position: fixed;
       top: 6em;
-      left: 12em;
-      right: 12em;
-      bottom: 6em;
+      bottom: 12em;
+      left: 16em;
+      right: 16em;
       padding: 2em;
+      padding-top: 1em;
       font-family: sans-serif;
       box-shadow: 0 28px 48px rgba(0, 0, 0, .4);
+
+      animation-name: opened;
+      animation-duration: 250ms;
+     }
+
+     @keyframes opened {
+      from {
+        transform: scale(0.4, 0.4);
+        opacity: 0.4;
+      }
+      to {
+        transform: scale(1, 1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0.2;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+     #background {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #7b7b7ba6;
+
+      animation-name: fadein;
+      animation-duration: 250ms;
      }
 
      #headerContainer {
@@ -148,7 +184,7 @@ export class pwbinstall extends LitElement {
       }
     }
     else {
-
+      // handle else case
     }
   }
 
@@ -159,6 +195,8 @@ export class pwbinstall extends LitElement {
   render() {
     return html`
       <button @click="${() => this.openPrompt()}">Install</button>
+
+      ${this.openModal ? html`<div id="background" @click="${() => this.cancel()}"></div>` : null}
 
       ${
       this.openModal ?
@@ -191,11 +229,11 @@ export class pwbinstall extends LitElement {
               <h3>Screenshots</h3>
               <div id="screenshots">
                 ${
-                this.manifestData.screenshots.map((screen) => {
-                  return html`
+              this.manifestData.screenshots.map((screen) => {
+                return html`
                         <img src="${screen.src}">
                       `
-                })}
+              })}
               </div>
             </div>
             ` : null}

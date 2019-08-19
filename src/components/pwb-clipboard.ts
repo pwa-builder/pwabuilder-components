@@ -42,7 +42,7 @@ export class pwbclipboard extends LitElement {
           }, 1200);
         }
         else {
-          console.info("pwb-clipboard: You must pass the property textToCopy. Something like <pwb-clipboard texttocopy='hello world' />");
+          console.info("pwb-clipboard: You must pass the property textToCopy, like <pwb-clipboard texttocopy='hello world' />");
         }
       }
       catch (err) {

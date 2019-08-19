@@ -3405,7 +3405,7 @@
                                       }, 1200);
                                   }
                                   else {
-                                      console.info("pwb-clipboard: You must pass the property textToCopy. Something like <pwb-clipboard texttocopy='hello world' />");
+                                      console.info("pwb-clipboard: You must pass the property textToCopy, like <pwb-clipboard texttocopy='hello world' />");
                                   }
                               }
                               catch (err) {
@@ -3454,7 +3454,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-clipboard.js.map
 
   let pwbshare = _decorate([customElement('pwb-share')], function (_initialize, _LitElement) {
       class pwbshare extends _LitElement {
@@ -3481,24 +3480,52 @@
                   key: "url",
                   value: void 0
               }, {
+                  kind: "get",
+                  static: true,
+                  key: "styles",
+                  value: function styles() {
+                      return css `
+      button {
+        text-align: center;
+        align-content: center;
+        align-self: center;
+        vertical-align: middle;
+        justify-self: flex-end;
+        min-width: 90px;
+        line-height: 200%;
+        flex: 0 0 auto;
+        display: inline-block;
+        background: #0078d4;
+        color: #ffffff;
+        cursor: pointer;
+        border: solid 1px rgba(0, 0, 0, 0);
+      }
+    `;
+                  }
+              }, {
                   kind: "method",
                   key: "share",
                   value: function share() {
                       return __awaiter(this, void 0, void 0, function* () {
-                          // have to cast to any here
-                          // because typescript lacks
-                          // types for the web share api
-                          if (navigator.share) {
-                              try {
-                                  yield navigator.share({
-                                      title: this.title,
-                                      text: this.text,
-                                      url: this.url
-                                  });
+                          if (this.title && this.text && this.url) {
+                              // have to cast to any here
+                              // because typescript lacks
+                              // types for the web share api
+                              if (navigator.share) {
+                                  try {
+                                      yield navigator.share({
+                                          title: this.title,
+                                          text: this.text,
+                                          url: this.url
+                                      });
+                                  }
+                                  catch (err) {
+                                      console.error(`pwb-share: ${err}`);
+                                  }
                               }
-                              catch (err) {
-                                  console.error('pwb-share: There was an error trying to share this content, make sure you pass a title, text and url');
-                              }
+                          }
+                          else {
+                              console.info('pwb-share: There was an error trying to share this content, make sure you pass a title, text and url like <pwb-share title="hello world" text="text to copy" url="https://microsoft.com" /> ');
                           }
                       });
                   }

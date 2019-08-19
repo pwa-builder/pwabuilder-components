@@ -3586,36 +3586,34 @@
       right: -1em;
      }
 
-     #installButton {
-      background: #2b5797;
-      color: white;
-      border: none;
-      font-size: 14px;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 9px;
-      padding-bottom: 9px;
-      border-radius: 5px;
-      margin-right: 10px;
-      text-transform: uppercase;
-      outline: none;
+     #openButton, #installButton {
+      text-align: center;
+      align-content: center;
+      align-self: center;
+      vertical-align: middle;
+      justify-self: flex-end;
+      max-width: 90px;
+      min-width: 90px;
+      line-height: 200%;
+      flex: 0 0 auto;
+      display: inline-block;
+      background: #0078d4;
+      color: #ffffff;
       cursor: pointer;
+      border: solid 1px rgba(0, 0, 0, 0);
      }
 
      #cancelButton {
       background: #ee1111;
       color: white;
-      border: none;
-      font-size: 14px;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 9px;
-      padding-bottom: 9px;
-      border-radius: 5px;
+      max-width: 90px;
+      min-width: 90px;
+      line-height: 200%;
       margin-right: 10px;
-      text-transform: uppercase;
       outline: none;
+      border: solid 1px rgba(0, 0, 0, 0);
       cursor: pointer;
+      margin-left: 10px;
      }
 
      #screenshots img {
@@ -3707,7 +3705,11 @@
                   key: "render",
                   value: function render() {
                       return html `
-      <button @click="${() => this.openPrompt()}">Install</button>
+      <button id="openButton" @click="${() => this.openPrompt()}">
+        <slot>
+          Install
+        </slot>
+      </button>
 
       ${this.openModal ? html `<div id="background" @click="${() => this.cancel()}"></div>` : null}
 
@@ -3759,7 +3761,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-install.js.map
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -11485,7 +11486,6 @@
       <div>
         <h3>${this.title}</h3>
       </div>
-      
       <ul>
       ${this.cardsToRender ? html `
            ${this.cardsToRender.map(card => {

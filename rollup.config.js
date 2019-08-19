@@ -1,12 +1,13 @@
 import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import { AdaptiveCard } from 'adaptivecards';
+import typescript from 'rollup-plugin-typescript';
 
-const extensions = [".js"];
+const extensions = [".js", ".ts"];
 
 const commonPlugins = [
   resolve({ module: true, jsnext: true, extensions }),
+  typescript(),
   commonjs({
     extensions, include: 'node_modules/**', namedExports: {
       "node_modules/adaptivecards/lib/adaptivecards.js": [
@@ -35,7 +36,7 @@ const babelInclude = [
 ];
 
 module.exports = {
-  input: 'build/es6/index.js',
+  input: 'src/index.ts',
   output: {
     dir: 'dist/esm',
     format: 'umd',
@@ -45,6 +46,7 @@ module.exports = {
     babel({
       extensions,
       presets: [
+        "@babel/preset-typescript",
         [
           "@babel/preset-env", {
             "targets": ">25%"

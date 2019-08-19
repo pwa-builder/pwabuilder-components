@@ -6,7 +6,7 @@
       "dom",
       "es2015"
     ],
-    "module": "es6",
+    "module": "es2015",
     "moduleResolution": "node",
     "target": "es2015",
     "outDir": "build/es6",

@@ -7,7 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "bundle": "rollup -c rollup.config.js"
+    "bundle": "rollup -c rollup.config.js --watch",
+    "serve": "npx httpster",
+    "dev": "npm run bundle"
   },
   "author": "",
   "license": "ISC",
@@ -17,10 +19,13 @@
     "@babel/plugin-proposal-decorators": "^7.4.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
     "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
     "rollup": "^1.18.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^1.10.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {

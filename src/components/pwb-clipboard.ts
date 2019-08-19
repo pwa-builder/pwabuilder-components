@@ -70,10 +70,6 @@ export class pwbclipboard extends LitElement {
   }
 
   render() {
-    /**
-     * Use JavaScript expressions to include property values in
-     * the element template.
-     */
     return html`
       <button @click="${() => this.copyText()}">
        ${

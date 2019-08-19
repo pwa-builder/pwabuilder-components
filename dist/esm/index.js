@@ -3439,10 +3439,6 @@
                   kind: "method",
                   key: "render",
                   value: function render() {
-                      /**
-                       * Use JavaScript expressions to include property values in
-                       * the element template.
-                       */
                       return html `
       <button @click="${() => this.copyText()}">
        ${this.textCopied ? html `
@@ -3458,6 +3454,7 @@
               }]
       };
   }, LitElement);
+  //# sourceMappingURL=pwb-clipboard.js.map
 
   let pwbshare = _decorate([customElement('pwb-share')], function (_initialize, _LitElement) {
       class pwbshare extends _LitElement {

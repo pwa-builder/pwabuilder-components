@@ -3282,6 +3282,40 @@
                   key: "watchedPosition",
                   value: void 0
               }, {
+                  kind: "get",
+                  static: true,
+                  key: "styles",
+                  value: function styles() {
+                      return css `
+      :host {
+        font-family: sans-serif;
+      }
+
+      #posDiv {
+        text-align: center;
+        align-content: center;
+        align-self: center;
+        vertical-align: middle;
+        justify-self: flex-end;
+        min-width: 223px;
+        line-height: 200%;
+        flex: 0 0 auto;
+        display: inline-block;
+        background: #0078d4;
+        color: #ffffff;
+        cursor: pointer;
+        border: solid 1px rgba(0, 0, 0, 0);
+      }
+    `;
+                  }
+              }, {
+                  kind: "method",
+                  key: "firstUpdated",
+                  value: function firstUpdated() {
+                      console.log('first updated');
+                      this.getLocation();
+                  }
+              }, {
                   kind: "method",
                   key: "getLocation",
                   value: function getLocation() {
@@ -3315,12 +3349,15 @@
                   kind: "method",
                   key: "render",
                   value: function render() {
-                      return html ``;
+                      return html `
+      <div id="posDiv">
+        ${this.currentPosition ? html `Location: <span>${this.currentPosition.latitude}, ${this.currentPosition.longitude}</span>` : 'Getting location...'}
+      </div>
+    `;
                   }
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-geolocation.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -3454,6 +3491,7 @@
               }]
       };
   }, LitElement);
+  //# sourceMappingURL=pwb-clipboard.js.map
 
   let pwbshare = _decorate([customElement('pwb-share')], function (_initialize, _LitElement) {
       class pwbshare extends _LitElement {

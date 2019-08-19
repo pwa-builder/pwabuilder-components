@@ -3491,7 +3491,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-clipboard.js.map
 
   let pwbshare = _decorate([customElement('pwb-share')], function (_initialize, _LitElement) {
       class pwbshare extends _LitElement {
@@ -3576,7 +3575,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-share.js.map
 
   let pwbinstall = _decorate([customElement('pwb-install')], function (_initialize, _LitElement) {
       class pwbinstall extends _LitElement {
@@ -3864,7 +3862,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-install.js.map
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -4048,7 +4045,7 @@
       ContainerFitStatus[ContainerFitStatus["Overflowing"] = 1] = "Overflowing";
       ContainerFitStatus[ContainerFitStatus["FullyOutOfContainer"] = 2] = "FullyOutOfContainer";
   })(ContainerFitStatus = exports.ContainerFitStatus || (exports.ContainerFitStatus = {}));
-  //# sourceMappingURL=enums.js.map
+
   });
 
   unwrapExports(enums);
@@ -4239,7 +4236,7 @@
   }());
   exports.UUID = UUID;
   UUID.initialize();
-  //# sourceMappingURL=shared.js.map
+
   });
 
   unwrapExports(shared);
@@ -4486,7 +4483,7 @@
       }
   }
   exports.getFitStatus = getFitStatus;
-  //# sourceMappingURL=utils.js.map
+
   });
 
   unwrapExports(utils);
@@ -5222,7 +5219,7 @@
       return HostConfig;
   }());
   exports.HostConfig = HostConfig;
-  //# sourceMappingURL=host-config.js.map
+
   });
 
   unwrapExports(hostConfig);
@@ -5316,7 +5313,7 @@
       return result;
   }
   exports.formatText = formatText;
-  //# sourceMappingURL=text-formatters.js.map
+
   });
 
   unwrapExports(textFormatters);
@@ -11366,7 +11363,7 @@
           spacing: 10
       }
   });
-  //# sourceMappingURL=card-elements.js.map
+
   });
 
   unwrapExports(cardElements);
@@ -11428,7 +11425,7 @@
   __export(hostConfig);
   __export(shared);
   __export(utils);
-  //# sourceMappingURL=adaptivecards.js.map
+
   });
 
   unwrapExports(adaptivecards);
@@ -11604,7 +11601,6 @@
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-adapcard.js.map
 
   exports.pwbadapcard = pwbadapcard;
   exports.pwbclipboard = pwbclipboard;

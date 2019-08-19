@@ -3361,6 +3361,13 @@
                   key: "textToCopy",
                   value: void 0
               }, {
+                  kind: "field",
+                  decorators: [property()],
+                  key: "textCopied",
+                  value() {
+                      return false;
+                  }
+              }, {
                   kind: "get",
                   static: true,
                   key: "styles",
@@ -3372,7 +3379,6 @@
         align-self: center;
         vertical-align: middle;
         justify-self: flex-end;
-        max-width: 90px;
         min-width: 90px;
         line-height: 200%;
         flex: 0 0 auto;
@@ -3393,6 +3399,10 @@
                               try {
                                   if (this.textToCopy) {
                                       yield navigator.clipboard.writeText(this.textToCopy);
+                                      this.textCopied = true;
+                                      setTimeout(() => {
+                                          this.textCopied = false;
+                                      }, 1200);
                                   }
                                   else {
                                       console.info("pwb-clipboard: You must pass the property textToCopy. Something like <pwb-clipboard texttocopy='hello world' />");
@@ -3435,16 +3445,19 @@
                        */
                       return html `
       <button @click="${() => this.copyText()}">
-        <slot>
-          Copy
-        </slot>
+       ${this.textCopied ? html `
+           Copied!
+        ` : html `
+          <slot>
+            Copy
+          </slot>
+        `}
       </button>
     `;
                   }
               }]
       };
   }, LitElement);
-  //# sourceMappingURL=pwb-clipboard.js.map
 
   let pwbshare = _decorate([customElement('pwb-share')], function (_initialize, _LitElement) {
       class pwbshare extends _LitElement {

@@ -7,6 +7,7 @@ export class pwbclipboard extends LitElement {
 
   @property()
   textToCopy: string;
+  @property() textCopied: boolean = false;
 
   static get styles() {
     return css`
@@ -16,7 +17,6 @@ export class pwbclipboard extends LitElement {
         align-self: center;
         vertical-align: middle;
         justify-self: flex-end;
-        max-width: 90px;
         min-width: 90px;
         line-height: 200%;
         flex: 0 0 auto;
@@ -34,6 +34,12 @@ export class pwbclipboard extends LitElement {
       try {
         if (this.textToCopy) {
           await navigator.clipboard.writeText(this.textToCopy);
+
+          this.textCopied = true;
+
+          setTimeout(() => {
+            this.textCopied = false;
+          }, 1200);
         }
         else {
           console.info("pwb-clipboard: You must pass the property textToCopy. Something like <pwb-clipboard texttocopy='hello world' />");
@@ -70,9 +76,15 @@ export class pwbclipboard extends LitElement {
      */
     return html`
       <button @click="${() => this.copyText()}">
-        <slot>
-          Copy
-        </slot>
+       ${
+      this.textCopied ? html`
+           Copied!
+        ` : html`
+          <slot>
+            Copy
+          </slot>
+        `
+      }
       </button>
     `;
   }
